@@ -8,9 +8,17 @@ const iniciales = (nombre, email) => {
   return base.slice(0, 2).toUpperCase();
 };
 
+// Rol legible (en vez del código en crudo).
+const ROL_LABEL = {
+  ADMIN: 'Administrador', OPERADOR: 'Operador', OPERARIO: 'Operario',
+  ADMINISTRATIVO: 'Administrativo', CALIDAD: 'Calidad', SISTEMAS: 'Sistemas',
+};
+const rolLabel = (r) => ROL_LABEL[String(r || '').toUpperCase()] || r;
+
 export default function App() {
   const [estado, setEstado] = useState('cargando'); // cargando | ok | error
   const [data, setData] = useState(null);
+  const [menuAbierto, setMenuAbierto] = useState(false);
 
   useEffect(() => {
     getMe()
@@ -53,13 +61,36 @@ export default function App() {
           <a className="brand-badge" href="/" title="Inicio"><img src="/logo.png" alt="Offal" /></a>
           <span className="brand-mark">OFFAL</span>
         </div>
-        <a className="user" href="/.auth/logout?post_logout_redirect_uri=/" title="Cerrar sesión">
-          <span className="avatar">{iniciales(usuario.nombre, usuario.email)}</span>
-          <span className="user-meta">
-            <span className="user-name">{usuario.nombre || usuario.email}</span>
-            <span className="user-logout">Cerrar sesión</span>
-          </span>
-        </a>
+        <div className="user-wrap">
+          <button
+            type="button"
+            className="user"
+            aria-haspopup="true"
+            aria-expanded={menuAbierto}
+            onClick={() => setMenuAbierto((v) => !v)}
+          >
+            <span className="avatar">{iniciales(usuario.nombre, usuario.email)}</span>
+            <span className="user-meta">
+              <span className="user-name">{usuario.nombre || usuario.email}</span>
+              <span className="user-logout">Mi cuenta</span>
+            </span>
+            <span className="user-caret" aria-hidden="true">▾</span>
+          </button>
+          {menuAbierto && (
+            <>
+              <div className="menu-backdrop" onClick={() => setMenuAbierto(false)} />
+              <div className="user-menu" role="menu">
+                <div className="user-menu-head">
+                  <span className="user-menu-name">{usuario.nombre || usuario.email}</span>
+                  <span className="user-menu-mail">{usuario.email}</span>
+                </div>
+                <a className="user-menu-item" href="/.auth/logout?post_logout_redirect_uri=/" role="menuitem">
+                  Cerrar sesión
+                </a>
+              </div>
+            </>
+          )}
+        </div>
       </header>
 
       <section className="hero">
@@ -81,7 +112,7 @@ export default function App() {
                 <span className="item-main">
                   <span className="item-top">
                     <span className="item-nombre">{a.nombre}</span>
-                    <span className="rol">{a.rol}</span>
+                    <span className="rol">{rolLabel(a.rol)}</span>
                   </span>
                   <span className="item-desc">{a.descripcion}</span>
                 </span>

@@ -58,15 +58,46 @@ body {
   color: var(--text);
 }
 
+.user-wrap { position: relative; }
 .user {
   display: flex; align-items: center; gap: 10px;
   text-decoration: none; color: var(--text);
+  font: inherit;
   padding: 6px 10px 6px 6px;
   border: 1px solid var(--line);
   border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
 }
 .user:hover { border-color: var(--red); background: rgba(199, 22, 58, 0.10); }
+.user-caret { color: var(--muted); font-size: 12px; }
+
+.menu-backdrop { position: fixed; inset: 0; z-index: 40; }
+.user-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 50;
+  min-width: 220px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+.user-menu-head { padding: 8px 10px 10px; border-bottom: 1px solid var(--line); margin-bottom: 6px; display: flex; flex-direction: column; gap: 2px; }
+.user-menu-name { font-size: 13px; font-weight: 600; }
+.user-menu-mail { font-size: 12px; color: var(--muted); word-break: break-all; }
+.user-menu-item {
+  display: block;
+  padding: 9px 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--red-bright);
+  font-size: 13px; font-weight: 600;
+}
+.user-menu-item:hover { background: rgba(199, 22, 58, 0.12); }
 
 .avatar {
   width: 34px; height: 34px;
