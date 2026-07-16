@@ -63,6 +63,7 @@ export default function App() {
       </header>
 
       <section className="hero">
+        <p className="overline">Panel de accesos</p>
         <h1>Hola{nombreCorto ? `, ${nombreCorto}` : ''}.</h1>
         <p className="lead">
           {apps.length > 0
