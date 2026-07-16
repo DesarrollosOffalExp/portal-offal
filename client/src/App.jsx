@@ -15,6 +15,18 @@ const ROL_LABEL = {
 };
 const rolLabel = (r) => ROL_LABEL[String(r || '').toUpperCase()] || r;
 
+// Agrupa las apps por sector, respetando el orden en que vienen del catálogo.
+const agruparPorSector = (apps) => {
+  const grupos = [];
+  const idx = new Map();
+  for (const a of apps) {
+    const sec = a.sector || 'Otros';
+    if (!idx.has(sec)) { idx.set(sec, grupos.length); grupos.push({ sector: sec, apps: [] }); }
+    grupos[idx.get(sec)].apps.push(a);
+  }
+  return grupos;
+};
+
 export default function App() {
   const [estado, setEstado] = useState('cargando'); // cargando | ok | error
   const [data, setData] = useState(null);
@@ -104,23 +116,29 @@ export default function App() {
       </section>
 
       {apps.length > 0 ? (
-        <ol className="lista">
-          {apps.map((a, i) => (
-            <li key={a.key}>
-              <a className={`item acento-${a.acento}`} href={a.url}>
-                <span className="idx">{String(i + 1).padStart(2, '0')}</span>
-                <span className="item-main">
-                  <span className="item-top">
-                    <span className="item-nombre">{a.nombre}</span>
-                    <span className="rol">{rolLabel(a.rol)}</span>
-                  </span>
-                  <span className="item-desc">{a.descripcion}</span>
-                </span>
-                <span className="flecha" aria-hidden="true">→</span>
-              </a>
-            </li>
+        <div className="sectores">
+          {agruparPorSector(apps).map((grupo) => (
+            <section className="sector" key={grupo.sector}>
+              <h2 className="sector-titulo">{grupo.sector}</h2>
+              <ol className="lista">
+                {grupo.apps.map((a) => (
+                  <li key={a.key}>
+                    <a className={`item acento-${a.acento}`} href={a.url}>
+                      <span className="item-main">
+                        <span className="item-top">
+                          <span className="item-nombre">{a.nombre}</span>
+                          <span className="rol">{rolLabel(a.rol)}</span>
+                        </span>
+                        <span className="item-desc">{a.descripcion}</span>
+                      </span>
+                      <span className="flecha" aria-hidden="true">→</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </section>
           ))}
-        </ol>
+        </div>
       ) : (
         <div className="empty">
           <h2>Sin secciones por ahora</h2>

@@ -47,6 +47,7 @@ app.get('/api/me', auth, async (req, res) => {
       .filter((a) => rolPorApp.has(a.key))
       .map((a) => ({
         key: a.key,
+        sector: a.sector,
         nombre: a.nombre,
         descripcion: a.descripcion,
         url: a.url,

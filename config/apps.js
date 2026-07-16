@@ -9,26 +9,35 @@
  * dominio personalizado antes de publicar. Se pueden sobreescribir por variable
  * de entorno (URL_PROVEEDORES, URL_ETIQUETAS, URL_LAVADOS) sin tocar el código.
  */
-module.exports = [
+// Orden en el que se muestran los sectores en el portal.
+const ORDEN_SECTORES = ['Recursos Humanos', 'Logística', 'Calidad'];
+
+const apps = [
   {
     key: 'proveedores',
+    sector: 'Recursos Humanos',
     nombre: 'Ingreso de Proveedores',
     descripcion: 'Registro de entradas y salidas de proveedores y visitas en planta.',
     url: process.env.URL_PROVEEDORES || 'https://controlingresoproveedores-e2htbfejf6hkf4bf.eastus-01.azurewebsites.net',
     acento: 'indigo',
   },
   {
-    key: 'etiquetas',
-    nombre: 'Control de Etiquetas',
-    descripcion: 'Circuito de solicitudes de etiquetas — REG-SIS-007 / 011.',
-    url: process.env.URL_ETIQUETAS || 'https://etiquetas.offalexpsa.ar',
-    acento: 'cyan',
-  },
-  {
     key: 'lavados',
-    nombre: 'Control de Lavados',
+    sector: 'Logística',
+    nombre: 'Control de Lavado de Camiones',
     descripcion: 'Lavado de camiones y fábrica de hielo.',
     url: process.env.URL_LAVADOS || 'https://controllavadocamiones-cyhscqdmf7eddhc8.eastus-01.azurewebsites.net',
     acento: 'verde',
   },
+  {
+    key: 'etiquetas',
+    sector: 'Calidad',
+    nombre: 'Control de Etiquetas',
+    descripcion: 'Registros de creación y modificación de etiquetas — REG-SIS-007 / 011.',
+    url: process.env.URL_ETIQUETAS || 'https://etiquetas.offalexpsa.ar',
+    acento: 'cyan',
+  },
 ];
+
+module.exports = apps;
+module.exports.ORDEN_SECTORES = ORDEN_SECTORES;
