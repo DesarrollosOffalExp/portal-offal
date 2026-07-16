@@ -50,8 +50,8 @@ export default function App() {
     <main className="wrap">
       <header className="top">
         <div className="brand">
+          <img className="brand-logo" src="/logo.png" alt="Offal" />
           <span className="brand-mark">OFFAL</span>
-          <span className="brand-sub">Sistemas</span>
         </div>
         <a className="user" href="/.auth/logout?post_logout_redirect_uri=/" title="Cerrar sesión">
           <span className="avatar">{iniciales(usuario.nombre, usuario.email)}</span>
