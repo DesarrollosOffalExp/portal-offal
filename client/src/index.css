@@ -235,3 +235,71 @@ body {
   .user-meta { display: none; }
   .user { padding: 6px; }
 }
+
+/* ---------- Widget de ayuda / soporte (flotante) ---------- */
+.soporte {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+.soporte-fab {
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  border: 0;
+  cursor: pointer;
+  font-size: 26px; font-weight: 700; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 10px 26px rgba(199, 22, 58, 0.45);
+  transition: background 0.15s, transform 0.15s;
+}
+.soporte-fab:hover { background: var(--red-bright); transform: translateY(-1px); }
+.soporte-panel {
+  width: 320px;
+  max-width: calc(100vw - 48px);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.soporte-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.soporte-titulo { font-size: 15px; font-weight: 700; }
+.soporte-x { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 15px; line-height: 1; }
+.soporte-x:hover { color: var(--text); }
+.soporte-sub { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
+.soporte-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 11px;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+}
+.soporte-input::placeholder { color: var(--muted); }
+.soporte-input:focus { outline: none; border-color: var(--red); }
+.soporte-textarea { resize: vertical; min-height: 72px; }
+.soporte-enviar {
+  width: 100%;
+  margin-top: 2px;
+  padding: 10px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--red);
+  color: #fff;
+  font: inherit; font-weight: 600; font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.soporte-enviar:hover:not(:disabled) { background: var(--red-bright); }
+.soporte-enviar:disabled { opacity: 0.5; cursor: not-allowed; }

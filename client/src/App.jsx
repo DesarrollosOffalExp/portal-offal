@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getMe } from './api.js';
+import SoporteWidget from './components/SoporteWidget.jsx';
 
 const iniciales = (nombre, email) => {
   const base = (nombre || email || '?').trim();
@@ -153,6 +154,8 @@ export default function App() {
         <span>Offal · Panel de accesos</span>
         <span className="pie-mail">{usuario.email}</span>
       </footer>
+
+      <SoporteWidget usuario={usuario} />
     </main>
   );
 }
