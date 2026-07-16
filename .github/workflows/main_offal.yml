@@ -1,0 +1,47 @@
+# Build y deploy del Portal Offal al App Service "offal" (Node).
+# Un solo job (sin artifacts), mismo criterio que las otras apps para no
+# consumir almacenamiento de Actions.
+
+name: Build and deploy Node.js app to Azure Web App - offal
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install server dependencies
+        run: npm install
+
+      - name: Build Frontend
+        run: |
+          cd client
+          npm install
+          npm run build
+
+      - name: 'Deploy to Azure Web App'
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'offal'
+          slot-name: 'Production'
+          package: .
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_OFFAL }}

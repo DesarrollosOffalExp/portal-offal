@@ -1,0 +1,22 @@
+{
+  "name": "portal-offal",
+  "version": "1.0.0",
+  "description": "Portal / index general de Offal — login único (Entra ID) y acceso a las apps según el padrón central (esquema acceso).",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
+    "client": "npm --prefix client run dev",
+    "client:build": "npm --prefix client install && npm --prefix client run build"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "mssql": "^11.0.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
