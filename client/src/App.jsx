@@ -50,7 +50,7 @@ export default function App() {
     <main className="wrap">
       <header className="top">
         <div className="brand">
-          <span className="brand-badge"><img src="/logo.png" alt="Offal" /></span>
+          <a className="brand-badge" href="/" title="Inicio"><img src="/logo.png" alt="Offal" /></a>
           <span className="brand-mark">OFFAL</span>
         </div>
         <a className="user" href="/.auth/logout?post_logout_redirect_uri=/" title="Cerrar sesión">
