@@ -14,7 +14,7 @@ module.exports = [
     key: 'proveedores',
     nombre: 'Ingreso de Proveedores',
     descripcion: 'Registro de entradas y salidas de proveedores y visitas en planta.',
-    url: process.env.URL_PROVEEDORES || 'https://controlingresoproveedores.azurewebsites.net',
+    url: process.env.URL_PROVEEDORES || 'https://controlingresoproveedores-e2htbfejf6hkf4bf.eastus-01.azurewebsites.net',
     acento: 'indigo',
   },
   {
@@ -28,7 +28,7 @@ module.exports = [
     key: 'lavados',
     nombre: 'Control de Lavados',
     descripcion: 'Lavado de camiones y fábrica de hielo.',
-    url: process.env.URL_LAVADOS || 'https://controllavadocamiones.azurewebsites.net',
+    url: process.env.URL_LAVADOS || 'https://controllavadocamiones-cyhscqdmf7eddhc8.eastus-01.azurewebsites.net',
     acento: 'verde',
   },
 ];
