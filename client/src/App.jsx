@@ -9,13 +9,6 @@ const iniciales = (nombre, email) => {
   return base.slice(0, 2).toUpperCase();
 };
 
-// Rol legible (en vez del código en crudo).
-const ROL_LABEL = {
-  ADMIN: 'Administrador', OPERADOR: 'Operador', OPERARIO: 'Operario',
-  ADMINISTRATIVO: 'Administrativo', CALIDAD: 'Calidad', SISTEMAS: 'Sistemas',
-};
-const rolLabel = (r) => ROL_LABEL[String(r || '').toUpperCase()] || r;
-
 // Ícono por sistema (SVG inline, hereda color y tamaño).
 const svg = (hijos) => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -165,10 +158,7 @@ export default function App() {
                     <a className="app-card" key={a.key} href={a.url}>
                       <span className="app-icon">{iconoDe(a.key)}</span>
                       <span className="app-body">
-                        <span className="app-top">
-                          <span className="app-nombre">{a.nombre}</span>
-                          <span className="rol">{rolLabel(a.rol)}</span>
-                        </span>
+                        <span className="app-nombre">{a.nombre}</span>
                         <span className="app-desc">{a.descripcion}</span>
                       </span>
                       <span className="flecha" aria-hidden="true">→</span>

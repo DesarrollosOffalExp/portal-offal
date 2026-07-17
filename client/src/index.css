@@ -195,7 +195,6 @@ body {
 .app-card:hover { background: var(--panel-2); border-left-color: var(--red-bright); }
 .app-icon { color: var(--red-bright); display: flex; align-items: center; flex-shrink: 0; }
 .app-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.app-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .app-nombre { font-size: clamp(15px, 2.2vw, 17px); font-weight: 700; letter-spacing: -0.01em; }
 .app-desc { color: var(--muted); font-size: 13px; }
 
@@ -212,18 +211,6 @@ body {
     padding: 0 0 12px;
   }
   .sidebar-label { display: none; }
-}
-
-.rol {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--red-bright);
-  border: 1px solid rgba(199, 22, 58, 0.42);
-  background: rgba(199, 22, 58, 0.12);
-  padding: 3px 8px;
-  border-radius: 999px;
 }
 
 .flecha { font-size: 20px; color: var(--muted); transition: transform 0.16s ease, color 0.16s ease; }
