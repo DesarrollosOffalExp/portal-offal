@@ -16,6 +16,18 @@ const ROL_LABEL = {
 };
 const rolLabel = (r) => ROL_LABEL[String(r || '').toUpperCase()] || r;
 
+// Ícono por sistema (SVG inline, hereda color y tamaño).
+const svg = (hijos) => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{hijos}</svg>
+);
+const ICONOS = {
+  proveedores: svg(<><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></>),
+  lavados: svg(<><rect x="1" y="3" width="15" height="13" /><polygon points="16 8 20 8 23 11 23 16 16 16 16 8" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" /></>),
+  etiquetas: svg(<><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></>),
+};
+const iconoDe = (key) => ICONOS[key] || svg(<><circle cx="12" cy="12" r="9" /></>);
+
 // Agrupa las apps por sector, respetando el orden en que vienen del catálogo.
 const agruparPorSector = (apps) => {
   const grupos = [];
@@ -32,6 +44,7 @@ export default function App() {
   const [estado, setEstado] = useState('cargando'); // cargando | ok | error
   const [data, setData] = useState(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [sectorActivo, setSectorActivo] = useState(null); // null = todos
 
   useEffect(() => {
     getMe()
@@ -66,6 +79,10 @@ export default function App() {
 
   const { usuario, apps } = data;
   const nombreCorto = (usuario.nombre || usuario.email || '').split(/\s+/)[0];
+
+  // Sectores que la persona realmente tiene (según sus permisos) y filtro activo.
+  const sectoresDisponibles = [...new Set(apps.map((a) => a.sector).filter(Boolean))];
+  const appsFiltradas = sectorActivo ? apps.filter((a) => a.sector === sectorActivo) : apps;
 
   return (
     <main className="wrap">
@@ -117,28 +134,50 @@ export default function App() {
       </section>
 
       {apps.length > 0 ? (
-        <div className="sectores">
-          {agruparPorSector(apps).map((grupo) => (
-            <section className="sector" key={grupo.sector}>
-              <h2 className="sector-titulo">{grupo.sector}</h2>
-              <ol className="lista">
-                {grupo.apps.map((a) => (
-                  <li key={a.key}>
-                    <a className={`item acento-${a.acento}`} href={a.url}>
-                      <span className="item-main">
-                        <span className="item-top">
-                          <span className="item-nombre">{a.nombre}</span>
+        <div className="panel">
+          <aside className="sidebar">
+            <p className="sidebar-label">Sectores</p>
+            <button
+              type="button"
+              className={`sector-link ${sectorActivo === null ? 'on' : ''}`}
+              onClick={() => setSectorActivo(null)}
+            >
+              Todos
+            </button>
+            {sectoresDisponibles.map((s) => (
+              <button
+                key={s}
+                type="button"
+                className={`sector-link ${sectorActivo === s ? 'on' : ''}`}
+                onClick={() => setSectorActivo(s)}
+              >
+                {s}
+              </button>
+            ))}
+          </aside>
+
+          <div className="panel-main">
+            {agruparPorSector(appsFiltradas).map((grupo) => (
+              <section className="sector" key={grupo.sector}>
+                <h2 className="sector-titulo">{grupo.sector}</h2>
+                <div className="apps">
+                  {grupo.apps.map((a) => (
+                    <a className="app-card" key={a.key} href={a.url}>
+                      <span className="app-icon">{iconoDe(a.key)}</span>
+                      <span className="app-body">
+                        <span className="app-top">
+                          <span className="app-nombre">{a.nombre}</span>
                           <span className="rol">{rolLabel(a.rol)}</span>
                         </span>
-                        <span className="item-desc">{a.descripcion}</span>
+                        <span className="app-desc">{a.descripcion}</span>
                       </span>
                       <span className="flecha" aria-hidden="true">→</span>
                     </a>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          ))}
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
         </div>
       ) : (
         <div className="empty">

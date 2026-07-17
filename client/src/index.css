@@ -12,7 +12,7 @@
   --red-bright: #e11f46;
   --red-deep: #9e1130;
   --radius: 14px;
-  --maxw: 760px;
+  --maxw: 980px;
 }
 
 * { box-sizing: border-box; }
@@ -128,59 +128,87 @@ body {
 }
 .lead { margin: 10px 0 0; color: var(--muted); font-size: clamp(15px, 2.4vw, 17px); }
 
-/* ---------- Sectores ---------- */
-.sectores { display: flex; flex-direction: column; gap: clamp(22px, 4vw, 34px); }
+/* ---------- Panel: barra lateral de sectores + área principal ---------- */
+.panel { display: grid; grid-template-columns: 190px 1fr; gap: clamp(20px, 3vw, 32px); align-items: start; }
+
+.sidebar {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 6px;
+  border-right: 1px solid var(--line);
+}
+.sidebar-label {
+  margin: 0 0 8px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sector-link {
+  text-align: left;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.sector-link:hover { color: var(--text); background: var(--panel); }
+.sector-link.on { color: #fff; background: var(--red); }
+
+.panel-main { display: flex; flex-direction: column; gap: clamp(22px, 3.5vw, 30px); min-width: 0; }
 .sector-titulo {
-  margin: 0 0 2px;
-  font-size: 12px;
+  margin: 0 0 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--red);
 }
 
-/* ---------- Lista de secciones ---------- */
-.lista { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
-
-.item {
-  position: relative;
+.apps { display: flex; flex-direction: column; gap: 10px; }
+.app-card {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: clamp(14px, 3vw, 24px);
-  padding: clamp(18px, 3.2vw, 24px) 6px;
-  border-bottom: 1px solid var(--line);
+  gap: 14px;
+  padding: 15px 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--red);
   text-decoration: none;
   color: var(--text);
-  --accent: var(--red);
-  transition: background 0.16s ease, padding-left 0.16s ease;
+  transition: background 0.15s ease, border-left-color 0.15s ease;
 }
-.item::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 10%; bottom: 10%;
-  width: 3px; border-radius: 3px;
-  background: var(--accent);
-  opacity: 0;
-  transition: opacity 0.16s ease;
-}
-.item:hover {
-  background: linear-gradient(90deg, rgba(199, 22, 58, 0.08), transparent 72%);
-  padding-left: 18px;
-}
-.item:hover::before { opacity: 1; }
+.app-card:hover { background: var(--panel-2); border-left-color: var(--red-bright); }
+.app-icon { color: var(--red-bright); display: flex; align-items: center; flex-shrink: 0; }
+.app-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.app-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.app-nombre { font-size: clamp(15px, 2.2vw, 17px); font-weight: 700; letter-spacing: -0.01em; }
+.app-desc { color: var(--muted); font-size: 13px; }
 
-.idx {
-  font-variant-numeric: tabular-nums;
-  font-weight: 800;
-  font-size: 14px;
-  color: var(--accent);
+@media (max-width: 720px) {
+  /* En mobile la barra lateral pasa a una fila de chips arriba. */
+  .panel { grid-template-columns: 1fr; gap: 18px; }
+  .sidebar {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 0 0 12px;
+  }
+  .sidebar-label { display: none; }
 }
-
-.item-main { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-.item-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.item-nombre { font-size: clamp(17px, 2.6vw, 20px); font-weight: 700; letter-spacing: -0.01em; }
-.item-desc { color: var(--muted); font-size: 14px; }
 
 .rol {
   font-size: 10.5px;
@@ -195,7 +223,7 @@ body {
 }
 
 .flecha { font-size: 20px; color: var(--muted); transition: transform 0.16s ease, color 0.16s ease; }
-.item:hover .flecha { transform: translateX(4px); color: var(--red-bright); }
+.app-card:hover .flecha { transform: translateX(4px); color: var(--red-bright); }
 
 /* ---------- Estados ---------- */
 .loading { color: var(--muted); padding: 80px 0; text-align: center; }
