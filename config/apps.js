@@ -10,9 +10,17 @@
  * de entorno (URL_PROVEEDORES, URL_ETIQUETAS, URL_LAVADOS) sin tocar el código.
  */
 // Orden en el que se muestran los sectores en el portal.
-const ORDEN_SECTORES = ['Recursos Humanos', 'Logística', 'Calidad'];
+const ORDEN_SECTORES = ['Recursos Humanos', 'Logística', 'Calidad', 'Compras'];
 
 const apps = [
+  {
+    key: 'contratos',
+    sector: 'Compras',
+    nombre: 'Contratos Comerciales',
+    descripcion: 'Gestión de contratos con proveedores: vencimientos, montos y PDF adjunto.',
+    url: process.env.URL_CONTRATOS || 'https://appcompras-cng7b6ewgxdhaqbh.canadacentral-01.azurewebsites.net',
+    acento: 'rojo',
+  },
   {
     key: 'proveedores',
     sector: 'Recursos Humanos',
