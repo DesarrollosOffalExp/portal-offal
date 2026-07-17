@@ -125,7 +125,8 @@ body {
 }
 .hero h1 {
   margin: 0;
-  font-size: clamp(30px, 6vw, 46px);
+  /* Más chico que el wordmark (34px) para que la marca sea lo más visible. */
+  font-size: clamp(20px, 2.6vw, 28px);
   font-weight: 800;
   letter-spacing: -0.02em;
 }
