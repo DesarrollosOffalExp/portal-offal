@@ -42,20 +42,23 @@ body {
 /* ---------- Header ---------- */
 .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 
-.brand { display: flex; align-items: center; gap: 11px; }
+.brand { display: flex; align-items: center; gap: clamp(10px, 1.4vw, 15px); min-width: 0; }
 .brand-badge {
-  width: 40px; height: 40px;
+  width: clamp(40px, 4.8vw, 58px);
+  height: clamp(40px, 4.8vw, 58px);
   border-radius: 50%;
   background: #fff;
   display: grid; place-items: center;
   flex-shrink: 0;
 }
-.brand-badge img { width: 26px; height: 26px; object-fit: contain; display: block; }
+.brand-badge img { width: 64%; height: 64%; object-fit: contain; display: block; }
 .brand-mark {
   font-weight: 800;
-  letter-spacing: 0.2em;
-  font-size: 18px;
+  letter-spacing: 0.09em;
+  font-size: clamp(15px, 3.1vw, 34px);
+  line-height: 1.05;
   color: var(--text);
+  white-space: nowrap;
 }
 
 .user-wrap { position: relative; }

@@ -88,8 +88,8 @@ export default function App() {
     <main className="wrap">
       <header className="top">
         <div className="brand">
-          <a className="brand-badge" href="/" title="Inicio"><img src="/logo.png" alt="Offal" /></a>
-          <span className="brand-mark">OFFAL</span>
+          <a className="brand-badge" href="/" title="Inicio"><img src="/logo.png" alt="Offal Exp S.A." /></a>
+          <span className="brand-mark">OFFAL EXP S.A.</span>
         </div>
         <div className="user-wrap">
           <button
