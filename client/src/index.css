@@ -257,6 +257,67 @@ body {
   .search { flex-basis: auto; min-width: 0; }
 }
 
+/* ---------- Pantalla de login ---------- */
+.login-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(900px 500px at 50% -10%, rgba(199, 22, 58, 0.20), transparent 60%),
+    var(--bg);
+}
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 30px 28px;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
+}
+.login-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+.login-badge {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: #fff;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+}
+.login-badge img { width: 62%; height: 62%; object-fit: contain; display: block; }
+.login-overline {
+  margin: 0 0 3px;
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.login-brand h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.01em; }
+.login-lead { margin: 0 0 20px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+
+.btn-ms {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #2f2f2f;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: filter 0.15s;
+}
+.btn-ms:hover { filter: brightness(1.18); }
+.ms-logo { width: 18px; height: 18px; flex-shrink: 0; }
+
+.login-nota { margin: 16px 0 0; text-align: center; color: var(--muted); font-size: 12.5px; }
+.login-nota b { color: var(--text); font-weight: 700; }
+
 /* ---------- Estados ---------- */
 .loading { color: var(--muted); padding: 80px 0; text-align: center; }
 

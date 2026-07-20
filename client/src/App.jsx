@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { getMe } from './api.js';
+import { getMe, LOGIN_URL } from './api.js';
 import SoporteWidget from './components/SoporteWidget.jsx';
 
 // ¿Mac? Para mostrar ⌘K en vez de Ctrl K en el buscador.
@@ -26,7 +26,7 @@ const ICONOS = {
 const iconoDe = (key) => ICONOS[key] || svg(<><circle cx="12" cy="12" r="9" /></>);
 
 export default function App() {
-  const [estado, setEstado] = useState('cargando'); // cargando | ok | error
+  const [estado, setEstado] = useState('cargando'); // cargando | login | ok | error
   const [data, setData] = useState(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [sectorActivo, setSectorActivo] = useState(null); // null = todos
@@ -41,7 +41,7 @@ export default function App() {
           setEstado('ok');
         }
       })
-      .catch(() => setEstado('error'));
+      .catch((e) => setEstado(e?.code === 'NO_AUTH' ? 'login' : 'error'));
   }, []);
 
   // Ctrl/⌘ + K enfoca el buscador desde cualquier parte.
@@ -61,6 +61,36 @@ export default function App() {
       <main className="wrap">
         <div className="loading">Cargando tu panel…</div>
       </main>
+    );
+  }
+
+  if (estado === 'login') {
+    return (
+      <>
+        <main className="login-shell">
+          <div className="login-card">
+            <div className="login-brand">
+              <span className="login-badge"><img src="/logo.png" alt="Offal Exp S.A." /></span>
+              <div>
+                <p className="login-overline">Offal Exp S.A.</p>
+                <h1>Panel de accesos</h1>
+              </div>
+            </div>
+            <p className="login-lead">Ingresá con tu cuenta corporativa para ver tus sistemas.</p>
+            <a className="btn-ms" href={LOGIN_URL}>
+              <svg className="ms-logo" viewBox="0 0 21 21" aria-hidden="true">
+                <rect x="1" y="1" width="9" height="9" fill="#f25022" />
+                <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
+                <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
+                <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
+              </svg>
+              Iniciar sesión con Microsoft
+            </a>
+            <p className="login-nota">Usá el correo <b>@offal.com.ar</b> de la empresa.</p>
+          </div>
+        </main>
+        <SoporteWidget usuario={null} />
+      </>
     );
   }
 
