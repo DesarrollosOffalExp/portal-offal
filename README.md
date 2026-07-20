@@ -32,7 +32,7 @@ npm start                 # backend en :3005
 En local no hay Easy Auth: el backend simula el usuario `DEV_EMAIL`
 (por defecto `roberto.sanabria@offal.com.ar`) para ver el padrón real.
 
-## Checklist para el inge (Azure)
+## Checklist
 
 Sobre el App Service **`offal`**:
 
