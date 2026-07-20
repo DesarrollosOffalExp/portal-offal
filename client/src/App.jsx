@@ -67,16 +67,21 @@ export default function App() {
   if (estado === 'login') {
     return (
       <>
-        <main className="login-shell">
-          <div className="login-card">
-            <div className="login-brand">
+        <main className="login-split">
+          <div className="login-brand-side">
+            <div className="login-brand-top">
               <span className="login-badge"><img src="/logo.png" alt="Offal Exp S.A." /></span>
-              <div>
-                <p className="login-overline">Offal Exp S.A.</p>
-                <h1>Panel de accesos</h1>
-              </div>
+              <p className="login-wordmark">OFFAL<br />EXP S.A.</p>
+              <p className="login-tag">Portal único de accesos a los sistemas de la empresa.</p>
             </div>
-            <p className="login-lead">Ingresá con tu cuenta corporativa para ver tus sistemas.</p>
+            <span className="login-side-foot">{typeof window !== 'undefined' ? window.location.host : ''}</span>
+            <span className="login-glow" aria-hidden="true" />
+          </div>
+
+          <div className="login-form-side">
+            <p className="login-overline">Panel de accesos</p>
+            <h1 className="login-title">Ingresá para continuar</h1>
+            <p className="login-lead">Iniciá sesión con tu cuenta corporativa de Microsoft.</p>
             <a className="btn-ms" href={LOGIN_URL}>
               <svg className="ms-logo" viewBox="0 0 21 21" aria-hidden="true">
                 <rect x="1" y="1" width="9" height="9" fill="#f25022" />
