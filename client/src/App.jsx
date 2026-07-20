@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getMe } from './api.js';
 import SoporteWidget from './components/SoporteWidget.jsx';
+
+// ¿Mac? Para mostrar ⌘K en vez de Ctrl K en el buscador.
+const esMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform || '');
 
 const iniciales = (nombre, email) => {
   const base = (nombre || email || '?').trim();
@@ -22,23 +25,13 @@ const ICONOS = {
 };
 const iconoDe = (key) => ICONOS[key] || svg(<><circle cx="12" cy="12" r="9" /></>);
 
-// Agrupa las apps por sector, respetando el orden en que vienen del catálogo.
-const agruparPorSector = (apps) => {
-  const grupos = [];
-  const idx = new Map();
-  for (const a of apps) {
-    const sec = a.sector || 'Otros';
-    if (!idx.has(sec)) { idx.set(sec, grupos.length); grupos.push({ sector: sec, apps: [] }); }
-    grupos[idx.get(sec)].apps.push(a);
-  }
-  return grupos;
-};
-
 export default function App() {
   const [estado, setEstado] = useState('cargando'); // cargando | ok | error
   const [data, setData] = useState(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [sectorActivo, setSectorActivo] = useState(null); // null = todos
+  const [busqueda, setBusqueda] = useState('');
+  const buscadorRef = useRef(null);
 
   useEffect(() => {
     getMe()
@@ -49,6 +42,18 @@ export default function App() {
         }
       })
       .catch(() => setEstado('error'));
+  }, []);
+
+  // Ctrl/⌘ + K enfoca el buscador desde cualquier parte.
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        buscadorRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, []);
 
   if (estado === 'cargando') {
@@ -72,11 +77,19 @@ export default function App() {
   }
 
   const { usuario, apps } = data;
-  const nombreCorto = (usuario.nombre || usuario.email || '').split(/\s+/)[0];
 
   // Sectores que la persona realmente tiene (según sus permisos) y filtro activo.
   const sectoresDisponibles = [...new Set(apps.map((a) => a.sector).filter(Boolean))];
-  const appsFiltradas = sectorActivo ? apps.filter((a) => a.sector === sectorActivo) : apps;
+  const q = busqueda.trim().toLowerCase();
+  const appsFiltradas = apps.filter((a) => {
+    const coincideSector = !sectorActivo || a.sector === sectorActivo;
+    const coincideTexto =
+      !q ||
+      (a.nombre || '').toLowerCase().includes(q) ||
+      (a.descripcion || '').toLowerCase().includes(q) ||
+      (a.sector || '').toLowerCase().includes(q);
+    return coincideSector && coincideTexto;
+  });
 
   return (
     <main className="wrap">
@@ -119,56 +132,70 @@ export default function App() {
 
       <section className="hero">
         <p className="overline">Panel de accesos</p>
-        <h1>Hola{nombreCorto ? `, ${nombreCorto}` : ''}.</h1>
-        <p className="lead">
+        <h1>
           {apps.length > 0
             ? 'Elegí a qué sistema querés entrar.'
             : 'Todavía no tenés secciones asignadas.'}
-        </p>
+        </h1>
       </section>
 
       {apps.length > 0 ? (
-        <div className="panel">
-          <aside className="sidebar">
-            <p className="sidebar-label">Sectores</p>
-            <button
-              type="button"
-              className={`sector-link ${sectorActivo === null ? 'on' : ''}`}
-              onClick={() => setSectorActivo(null)}
-            >
-              Todos
-            </button>
-            {sectoresDisponibles.map((s) => (
+        <div className="panel-a">
+          <div className="controles">
+            <div className="chips">
               <button
-                key={s}
                 type="button"
-                className={`sector-link ${sectorActivo === s ? 'on' : ''}`}
-                onClick={() => setSectorActivo(s)}
+                className={`chip ${sectorActivo === null ? 'on' : ''}`}
+                onClick={() => setSectorActivo(null)}
               >
-                {s}
+                Todos
               </button>
-            ))}
-          </aside>
+              {sectoresDisponibles.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  className={`chip ${sectorActivo === s ? 'on' : ''}`}
+                  onClick={() => setSectorActivo(s)}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
 
-          <div className="panel-main">
-            {agruparPorSector(appsFiltradas).map((grupo) => (
-              <section className="sector" key={grupo.sector}>
-                <h2 className="sector-titulo">{grupo.sector}</h2>
-                <div className="apps">
-                  {grupo.apps.map((a) => (
-                    <a className="app-card" key={a.key} href={a.url}>
-                      <span className="app-icon">{iconoDe(a.key)}</span>
-                      <span className="app-body">
-                        <span className="app-nombre">{a.nombre}</span>
-                        <span className="app-desc">{a.descripcion}</span>
-                      </span>
-                      <span className="flecha" aria-hidden="true">→</span>
-                    </a>
-                  ))}
-                </div>
-              </section>
-            ))}
+            <div className="search">
+              <svg className="lupa" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+              <input
+                ref={buscadorRef}
+                type="text"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                placeholder="Buscar sistema…"
+                aria-label="Buscar sistema"
+              />
+              <span className="kbd" aria-hidden="true">{esMac ? '⌘K' : 'Ctrl K'}</span>
+            </div>
           </div>
+
+          {appsFiltradas.length > 0 ? (
+            <div className="apps-grid">
+              {appsFiltradas.map((a) => (
+                <a className="app-card" key={a.key} href={a.url}>
+                  {a.sector && <span className="app-tag">{a.sector}</span>}
+                  <span className="app-icon">{iconoDe(a.key)}</span>
+                  <span className="app-nombre">{a.nombre}</span>
+                  <span className="app-desc">{a.descripcion}</span>
+                  <span className="app-go">Entrar <span aria-hidden="true">→</span></span>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <div className="sin-resultados">
+              No encontramos sistemas para “{busqueda}”. Probá con otro término o sector.
+            </div>
+          )}
         </div>
       ) : (
         <div className="empty">

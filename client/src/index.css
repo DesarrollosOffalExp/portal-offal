@@ -12,7 +12,8 @@
   --red-bright: #e11f46;
   --red-deep: #9e1130;
   --radius: 14px;
-  --maxw: 980px;
+  --maxw: 1180px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 * { box-sizing: border-box; }
@@ -125,96 +126,136 @@ body {
 }
 .hero h1 {
   margin: 0;
-  /* Más chico que el wordmark (34px) para que la marca sea lo más visible. */
-  font-size: clamp(20px, 2.6vw, 28px);
+  /* Ahora es el título principal (antes era el "Hola, …"). */
+  font-size: clamp(26px, 3.6vw, 40px);
   font-weight: 800;
   letter-spacing: -0.02em;
+  line-height: 1.1;
+  max-width: 20ch;
 }
-.lead { margin: 10px 0 0; color: var(--muted); font-size: clamp(15px, 2.4vw, 17px); }
 
-/* ---------- Panel: barra lateral de sectores + área principal ---------- */
-.panel { display: grid; grid-template-columns: 190px 1fr; gap: clamp(20px, 3vw, 32px); align-items: start; }
-
-.sidebar {
-  position: sticky;
-  top: 24px;
+/* ---------- Controles: chips de sector + buscador ---------- */
+.controles {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding-right: 6px;
-  border-right: 1px solid var(--line);
-}
-.sidebar-label {
-  margin: 0 0 8px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.sector-link {
-  text-align: left;
-  background: transparent;
-  border: 0;
-  color: var(--muted);
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-.sector-link:hover { color: var(--text); background: var(--panel); }
-.sector-link.on { color: #fff; background: var(--red); }
-
-.panel-main { display: flex; flex-direction: column; gap: clamp(22px, 3.5vw, 30px); min-width: 0; }
-.sector-titulo {
-  margin: 0 0 10px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--red);
-}
-
-.apps { display: flex; flex-direction: column; gap: 10px; }
-.app-card {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 14px;
-  padding: 15px 16px;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: clamp(20px, 3vw, 28px);
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--muted);
   background: var(--panel);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--red);
+  border-radius: 999px;
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+.chip:hover { color: var(--text); border-color: var(--red-deep); }
+.chip.on { background: var(--red); color: #fff; border-color: var(--red); }
+
+.search { position: relative; display: flex; align-items: center; flex: 0 1 320px; min-width: 220px; }
+.search .lupa {
+  position: absolute;
+  left: 14px;
+  width: 17px; height: 17px;
+  color: var(--muted);
+  pointer-events: none;
+}
+.search input {
+  width: 100%;
+  font: inherit;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 11px 62px 11px 40px;
+}
+.search input::placeholder { color: var(--muted); }
+.search input:focus { outline: none; border-color: var(--red); }
+.kbd {
+  position: absolute;
+  right: 12px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 2px 6px;
+  background: var(--panel);
+}
+
+/* ---------- Grilla de sistemas (tarjetas) ---------- */
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 16px;
+}
+.app-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 150px;
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--red);
+  border-radius: 12px;
   text-decoration: none;
   color: var(--text);
-  transition: background 0.15s ease, border-left-color 0.15s ease;
+  transition: background 0.16s ease, border-top-color 0.16s ease, transform 0.16s ease;
 }
-.app-card:hover { background: var(--panel-2); border-left-color: var(--red-bright); }
-.app-icon { color: var(--red-bright); display: flex; align-items: center; flex-shrink: 0; }
-.app-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.app-nombre { font-size: clamp(15px, 2.2vw, 17px); font-weight: 700; letter-spacing: -0.01em; }
-.app-desc { color: var(--muted); font-size: 13px; }
+.app-card:hover { background: var(--panel-2); border-top-color: var(--red-bright); transform: translateY(-2px); }
+.app-tag {
+  position: absolute;
+  top: 16px; right: 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.app-icon {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border-radius: 11px;
+  background: rgba(199, 22, 58, 0.12);
+  color: var(--red-bright);
+  flex-shrink: 0;
+}
+.app-nombre { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+.app-desc { color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+.app-go {
+  margin-top: auto;
+  font-size: 12px; font-weight: 700;
+  color: var(--muted);
+  display: flex; align-items: center; gap: 6px;
+  transition: color 0.16s ease;
+}
+.app-card:hover .app-go { color: var(--red-bright); }
 
-@media (max-width: 720px) {
-  /* En mobile la barra lateral pasa a una fila de chips arriba. */
-  .panel { grid-template-columns: 1fr; gap: 18px; }
-  .sidebar {
-    position: static;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-    padding: 0 0 12px;
-  }
-  .sidebar-label { display: none; }
+.sin-resultados {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 15px;
 }
 
-.flecha { font-size: 20px; color: var(--muted); transition: transform 0.16s ease, color 0.16s ease; }
-.app-card:hover .flecha { transform: translateX(4px); color: var(--red-bright); }
+@media (max-width: 560px) {
+  .controles { flex-direction: column; align-items: stretch; }
+  .search { flex-basis: auto; min-width: 0; }
+}
 
 /* ---------- Estados ---------- */
 .loading { color: var(--muted); padding: 80px 0; text-align: center; }
