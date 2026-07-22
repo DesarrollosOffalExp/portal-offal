@@ -242,33 +242,35 @@ export default function App() {
       {apps.length > 0 ? (
         <div className="panel-a">
           <div className="controles">
+            {/* Sin chip "Todos": cada chip funciona como interruptor y, cuando
+                ninguno está activo, se ven todos los módulos. */}
             <div className="chips">
               <button
                 type="button"
-                className={`chip ${sectorActivo === null && !soloFavoritos ? 'on' : ''}`}
-                onClick={() => { setSectorActivo(null); setSoloFavoritos(false); }}
-              >
-                Todos
-              </button>
-              <button
-                type="button"
                 className={`chip chip-fav ${soloFavoritos ? 'on' : ''}`}
-                onClick={() => { setSoloFavoritos(true); setSectorActivo(null); }}
+                aria-pressed={soloFavoritos}
+                title={soloFavoritos ? 'Ver todos los módulos' : 'Ver solo mis favoritos'}
+                onClick={() => { setSoloFavoritos((v) => !v); setSectorActivo(null); }}
               >
                 {iconoEstrella(soloFavoritos)}
                 Favoritos
                 {cantidadFavoritos > 0 && <span className="chip-cont">{cantidadFavoritos}</span>}
               </button>
-              {sectoresDisponibles.map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  className={`chip ${sectorActivo === s && !soloFavoritos ? 'on' : ''}`}
-                  onClick={() => { setSectorActivo(s); setSoloFavoritos(false); }}
-                >
-                  {s}
-                </button>
-              ))}
+              {sectoresDisponibles.map((s) => {
+                const activo = sectorActivo === s && !soloFavoritos;
+                return (
+                  <button
+                    key={s}
+                    type="button"
+                    className={`chip ${activo ? 'on' : ''}`}
+                    aria-pressed={activo}
+                    title={activo ? 'Quitar el filtro' : `Ver solo ${s}`}
+                    onClick={() => { setSectorActivo(activo ? null : s); setSoloFavoritos(false); }}
+                  >
+                    {s}
+                  </button>
+                );
+              })}
             </div>
 
             <div className="search">
