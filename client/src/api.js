@@ -3,7 +3,8 @@
 // URL de Easy Auth (Entra ID) para iniciar sesión y volver al inicio.
 export const LOGIN_URL = '/.auth/login/aad?post_login_redirect_uri=/';
 
-// Ingreso de usuarios EXTERNOS (proveedores, contratistas sin correo corporativo).
+// Ingreso del personal CONTRATADO de Offal que no tiene correo @offal.com.ar
+// (nada que ver con los proveedores del módulo de Compras).
 // Quien entra por acá igual debe estar cargado en acceso.Usuarios para ver algo.
 //   - Invitados de Entra (B2B + código por mail): se usa el mismo /aad de arriba.
 //   - Proveedor social (Google) en Easy Auth: cambiar a '/.auth/login/google?post_login_redirect_uri=/'.

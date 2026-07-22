@@ -81,7 +81,7 @@ export default function App() {
               <p className="login-overline">Panel de accesos</p>
               <h1 className="login-title">Ingresá para continuar</h1>
               <p className="login-lead">
-                Usá tu cuenta corporativa. Si sos proveedor o externo, entrá con tu correo.
+                Usá tu cuenta corporativa. Si no tenés correo de la empresa, entrá con tu correo personal.
               </p>
 
               <a className="btn-ms" href={LOGIN_URL}>
@@ -104,7 +104,7 @@ export default function App() {
                 </svg>
                 Ingresar con otro correo
               </a>
-              <p className="login-hint">Proveedores y usuarios externos</p>
+              <p className="login-hint">Personal contratado sin correo corporativo</p>
             </div>
           </div>
         </main>
