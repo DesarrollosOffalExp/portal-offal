@@ -5,6 +5,29 @@ import SoporteWidget from './components/SoporteWidget.jsx';
 // ¿Mac? Para mostrar ⌘K en vez de Ctrl K en el buscador.
 const esMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform || '');
 
+// Los favoritos se guardan en el navegador de cada persona: no requiere tocar
+// el padrón ni sumar endpoints de escritura al portal. Contra: no se comparten
+// entre dispositivos.
+const FAVORITOS_KEY = 'offal.portal.favoritos';
+
+const leerFavoritos = () => {
+  try {
+    const guardado = JSON.parse(localStorage.getItem(FAVORITOS_KEY) || '[]');
+    return new Set(Array.isArray(guardado) ? guardado : []);
+  } catch {
+    return new Set();
+  }
+};
+
+// Estrella para marcar/desmarcar un módulo como favorito.
+const iconoEstrella = (marcada) => (
+  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"
+    fill={marcada ? 'currentColor' : 'none'} stroke="currentColor"
+    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+  </svg>
+);
+
 const iniciales = (nombre, email) => {
   const base = (nombre || email || '?').trim();
   const partes = base.split(/\s+/).filter(Boolean);
@@ -31,7 +54,23 @@ export default function App() {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [sectorActivo, setSectorActivo] = useState(null); // null = todos
   const [busqueda, setBusqueda] = useState('');
+  const [favoritos, setFavoritos] = useState(leerFavoritos);
+  const [soloFavoritos, setSoloFavoritos] = useState(false);
   const buscadorRef = useRef(null);
+
+  const alternarFavorito = (key) => {
+    setFavoritos((previos) => {
+      const siguiente = new Set(previos);
+      if (siguiente.has(key)) siguiente.delete(key);
+      else siguiente.add(key);
+      try {
+        localStorage.setItem(FAVORITOS_KEY, JSON.stringify([...siguiente]));
+      } catch {
+        // Si el navegador bloquea el almacenamiento, el favorito vale solo para esta visita.
+      }
+      return siguiente;
+    });
+  };
 
   useEffect(() => {
     getMe()
@@ -136,15 +175,21 @@ export default function App() {
   // Sectores que la persona realmente tiene (según sus permisos) y filtro activo.
   const sectoresDisponibles = [...new Set(apps.map((a) => a.sector).filter(Boolean))];
   const q = busqueda.trim().toLowerCase();
-  const appsFiltradas = apps.filter((a) => {
-    const coincideSector = !sectorActivo || a.sector === sectorActivo;
-    const coincideTexto =
-      !q ||
-      (a.nombre || '').toLowerCase().includes(q) ||
-      (a.descripcion || '').toLowerCase().includes(q) ||
-      (a.sector || '').toLowerCase().includes(q);
-    return coincideSector && coincideTexto;
-  });
+  const appsFiltradas = apps
+    .filter((a) => {
+      const coincideFavorito = !soloFavoritos || favoritos.has(a.key);
+      const coincideSector = !sectorActivo || a.sector === sectorActivo;
+      const coincideTexto =
+        !q ||
+        (a.nombre || '').toLowerCase().includes(q) ||
+        (a.descripcion || '').toLowerCase().includes(q) ||
+        (a.sector || '').toLowerCase().includes(q);
+      return coincideFavorito && coincideSector && coincideTexto;
+    })
+    // Los favoritos van primero, manteniendo el orden del catálogo dentro de cada grupo.
+    .sort((a, b) => Number(favoritos.has(b.key)) - Number(favoritos.has(a.key)));
+
+  const cantidadFavoritos = apps.filter((a) => favoritos.has(a.key)).length;
 
   return (
     <main className="wrap">
@@ -189,8 +234,8 @@ export default function App() {
         <p className="overline">Panel de accesos</p>
         <h1>
           {apps.length > 0
-            ? 'Elegí a qué sistema querés entrar.'
-            : 'Todavía no tenés secciones asignadas.'}
+            ? 'Elegí el módulo a utilizar.'
+            : 'Todavía no tenés módulos asignados.'}
         </h1>
       </section>
 
@@ -200,17 +245,26 @@ export default function App() {
             <div className="chips">
               <button
                 type="button"
-                className={`chip ${sectorActivo === null ? 'on' : ''}`}
-                onClick={() => setSectorActivo(null)}
+                className={`chip ${sectorActivo === null && !soloFavoritos ? 'on' : ''}`}
+                onClick={() => { setSectorActivo(null); setSoloFavoritos(false); }}
               >
                 Todos
+              </button>
+              <button
+                type="button"
+                className={`chip chip-fav ${soloFavoritos ? 'on' : ''}`}
+                onClick={() => { setSoloFavoritos(true); setSectorActivo(null); }}
+              >
+                {iconoEstrella(soloFavoritos)}
+                Favoritos
+                {cantidadFavoritos > 0 && <span className="chip-cont">{cantidadFavoritos}</span>}
               </button>
               {sectoresDisponibles.map((s) => (
                 <button
                   key={s}
                   type="button"
-                  className={`chip ${sectorActivo === s ? 'on' : ''}`}
-                  onClick={() => setSectorActivo(s)}
+                  className={`chip ${sectorActivo === s && !soloFavoritos ? 'on' : ''}`}
+                  onClick={() => { setSectorActivo(s); setSoloFavoritos(false); }}
                 >
                   {s}
                 </button>
@@ -236,19 +290,45 @@ export default function App() {
 
           {appsFiltradas.length > 0 ? (
             <div className="apps-grid">
-              {appsFiltradas.map((a) => (
-                <a className="app-card" key={a.key} href={a.url}>
-                  {a.sector && <span className="app-tag">{a.sector}</span>}
-                  <span className="app-icon">{iconoDe(a.key)}</span>
-                  <span className="app-nombre">{a.nombre}</span>
-                  <span className="app-desc">{a.descripcion}</span>
-                  <span className="app-go">Entrar <span aria-hidden="true">→</span></span>
-                </a>
-              ))}
+              {appsFiltradas.map((a) => {
+                const esFavorito = favoritos.has(a.key);
+                return (
+                  <div className={`app-card ${esFavorito ? 'es-favorito' : ''}`} key={a.key}>
+                    <div className="app-acciones">
+                      {a.sector && <span className="app-tag">{a.sector}</span>}
+                      <button
+                        type="button"
+                        className={`app-pin ${esFavorito ? 'on' : ''}`}
+                        onClick={() => alternarFavorito(a.key)}
+                        aria-pressed={esFavorito}
+                        aria-label={esFavorito
+                          ? `Quitar ${a.nombre} de favoritos`
+                          : `Marcar ${a.nombre} como favorito`}
+                        title={esFavorito ? 'Quitar de favoritos' : 'Marcar como favorito'}
+                      >
+                        {iconoEstrella(esFavorito)}
+                      </button>
+                    </div>
+                    <span className="app-icon">{iconoDe(a.key)}</span>
+                    {/* El enlace se estira sobre toda la tarjeta (ver .app-enlace::after),
+                        así se puede clickear en cualquier parte sin anidar el botón. */}
+                    <a className="app-nombre app-enlace" href={a.url}>{a.nombre}</a>
+                    <span className="app-desc">{a.descripcion}</span>
+                    <span className="app-go">Entrar <span aria-hidden="true">→</span></span>
+                  </div>
+                );
+              })}
             </div>
           ) : (
             <div className="sin-resultados">
-              No encontramos sistemas para “{busqueda}”. Probá con otro término o sector.
+              {soloFavoritos && cantidadFavoritos === 0 && !q ? (
+                <>
+                  Todavía no marcaste ningún módulo como favorito.<br />
+                  Tocá la <span className="estrella-inline">{iconoEstrella(false)}</span> de una tarjeta para tenerlo siempre a mano.
+                </>
+              ) : (
+                <>No encontramos módulos para “{busqueda}”. Probá con otro término o sector.</>
+              )}
             </div>
           )}
         </div>
