@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { getMe, LOGIN_URL, LOGIN_EXTERNO_URL } from './api.js';
+import { getMe, LOGIN_URL, LOGIN_EXTERNO_URL, INGRESO_EXTERNO_HABILITADO } from './api.js';
 import SoporteWidget from './components/SoporteWidget.jsx';
 
 // ¿Mac? Para mostrar ⌘K en vez de Ctrl K en el buscador.
@@ -81,7 +81,9 @@ export default function App() {
               <p className="login-overline">Panel de accesos</p>
               <h1 className="login-title">Ingresá para continuar</h1>
               <p className="login-lead">
-                Usá tu cuenta corporativa. Si no tenés correo de la empresa, entrá con tu correo personal.
+                {INGRESO_EXTERNO_HABILITADO
+                  ? 'Usá tu cuenta corporativa. Si no tenés correo de la empresa, entrá con tu correo personal.'
+                  : 'Ingresá con tu cuenta corporativa para ver tus sistemas.'}
               </p>
 
               <a className="btn-ms" href={LOGIN_URL}>
@@ -95,16 +97,20 @@ export default function App() {
               </a>
               <p className="login-hint">Para cuentas <b>@offal.com.ar</b></p>
 
-              <div className="login-sep"><span>o</span></div>
+              {INGRESO_EXTERNO_HABILITADO && (
+                <>
+                  <div className="login-sep"><span>o</span></div>
 
-              <a className="btn-ext" href={LOGIN_EXTERNO_URL}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <rect x="2" y="4" width="20" height="16" rx="2" />
-                  <path d="m22 7-10 6L2 7" />
-                </svg>
-                Ingresar con otro correo
-              </a>
-              <p className="login-hint">Personal contratado sin correo corporativo</p>
+                  <a className="btn-ext" href={LOGIN_EXTERNO_URL}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <rect x="2" y="4" width="20" height="16" rx="2" />
+                      <path d="m22 7-10 6L2 7" />
+                    </svg>
+                    Ingresar con otro correo
+                  </a>
+                  <p className="login-hint">Personal contratado sin correo corporativo</p>
+                </>
+              )}
             </div>
           </div>
         </main>
