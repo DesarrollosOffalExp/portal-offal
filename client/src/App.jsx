@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { getMe, LOGIN_URL } from './api.js';
+import { getMe, LOGIN_URL, LOGIN_EXTERNO_URL } from './api.js';
 import SoporteWidget from './components/SoporteWidget.jsx';
 
 // ¿Mac? Para mostrar ⌘K en vez de Ctrl K en el buscador.
@@ -69,29 +69,43 @@ export default function App() {
       <>
         <main className="login-split">
           <div className="login-brand-side">
-            <div className="login-brand-top">
+            <div className="login-brand-inner">
               <span className="login-badge"><img src="/logo.png" alt="Offal Exp S.A." /></span>
-              <p className="login-wordmark">OFFAL<br />EXP S.A.</p>
+              <p className="login-wordmark">OFFAL EXP S.A.</p>
               <p className="login-tag">Portal único de accesos a los sistemas de la empresa.</p>
             </div>
-            <span className="login-side-foot">{typeof window !== 'undefined' ? window.location.host : ''}</span>
-            <span className="login-glow" aria-hidden="true" />
           </div>
 
           <div className="login-form-side">
-            <p className="login-overline">Panel de accesos</p>
-            <h1 className="login-title">Ingresá para continuar</h1>
-            <p className="login-lead">Iniciá sesión con tu cuenta corporativa de Microsoft.</p>
-            <a className="btn-ms" href={LOGIN_URL}>
-              <svg className="ms-logo" viewBox="0 0 21 21" aria-hidden="true">
-                <rect x="1" y="1" width="9" height="9" fill="#f25022" />
-                <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
-                <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
-                <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
-              </svg>
-              Iniciar sesión con Microsoft
-            </a>
-            <p className="login-nota">Usá el correo <b>@offal.com.ar</b> de la empresa.</p>
+            <div className="login-form-inner">
+              <p className="login-overline">Panel de accesos</p>
+              <h1 className="login-title">Ingresá para continuar</h1>
+              <p className="login-lead">
+                Usá tu cuenta corporativa. Si no tenés correo de la empresa, entrá con tu correo personal.
+              </p>
+
+              <a className="btn-ms" href={LOGIN_URL}>
+                <svg className="ms-logo" viewBox="0 0 21 21" aria-hidden="true">
+                  <rect x="1" y="1" width="9" height="9" fill="#f25022" />
+                  <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
+                  <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
+                  <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
+                </svg>
+                Iniciar sesión con Microsoft
+              </a>
+              <p className="login-hint">Para cuentas <b>@offal.com.ar</b></p>
+
+              <div className="login-sep"><span>o</span></div>
+
+              <a className="btn-ext" href={LOGIN_EXTERNO_URL}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="m22 7-10 6L2 7" />
+                </svg>
+                Ingresar con otro correo
+              </a>
+              <p className="login-hint">Personal contratado sin correo corporativo</p>
+            </div>
           </div>
         </main>
         <SoporteWidget usuario={null} />
