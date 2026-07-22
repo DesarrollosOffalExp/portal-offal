@@ -41,7 +41,15 @@ body {
 }
 
 /* ---------- Header ---------- */
-.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+/* Línea divisoria en el rojo de marca, debajo del wordmark y del usuario. */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: clamp(14px, 2vw, 20px);
+  border-bottom: 2px solid var(--red);
+}
 
 .brand { display: flex; align-items: center; gap: clamp(10px, 1.4vw, 15px); min-width: 0; }
 .brand-badge {
@@ -126,12 +134,12 @@ body {
 }
 .hero h1 {
   margin: 0;
-  /* Ahora es el título principal (antes era el "Hola, …"). */
-  font-size: clamp(26px, 3.6vw, 40px);
+  /* Título principal, en un tamaño contenido para no competir con el wordmark. */
+  font-size: clamp(20px, 2.4vw, 27px);
   font-weight: 800;
   letter-spacing: -0.02em;
-  line-height: 1.1;
-  max-width: 20ch;
+  line-height: 1.15;
+  max-width: 24ch;
 }
 
 /* ---------- Controles: chips de sector + buscador ---------- */
@@ -159,6 +167,19 @@ body {
 }
 .chip:hover { color: var(--text); border-color: var(--red-deep); }
 .chip.on { background: var(--red); color: #fff; border-color: var(--red); }
+
+.chip-fav { display: inline-flex; align-items: center; gap: 6px; }
+.chip-fav svg { width: 14px; height: 14px; }
+.chip-cont {
+  min-width: 17px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.14);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  line-height: 17px;
+}
+.chip-fav:not(.on) .chip-cont { background: var(--bg-2); }
 
 .search { position: relative; display: flex; align-items: center; flex: 0 1 320px; min-width: 220px; }
 .search .lupa {
@@ -214,15 +235,48 @@ body {
   transition: background 0.16s ease, border-top-color 0.16s ease, transform 0.16s ease;
 }
 .app-card:hover { background: var(--panel-2); border-top-color: var(--red-bright); transform: translateY(-2px); }
-.app-tag {
+/* Un favorito se distingue por el borde superior siempre encendido. */
+.app-card.es-favorito { border-top-color: var(--red-bright); }
+
+/* El enlace se estira sobre toda la tarjeta: así se puede clickear en
+   cualquier parte y el botón de favorito queda por encima (z-index). */
+.app-enlace { position: relative; z-index: 0; }
+.app-enlace::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }
+.app-enlace:focus-visible { outline: 2px solid var(--red-bright); outline-offset: 3px; border-radius: 4px; }
+
+.app-acciones {
   position: absolute;
-  top: 16px; right: 16px;
+  top: 14px; right: 14px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.app-tag {
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted);
 }
+
+.app-pin {
+  display: grid;
+  place-items: center;
+  width: 28px; height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+.app-pin:hover { color: var(--red-bright); background: rgba(199, 22, 58, 0.12); }
+.app-pin.on { color: var(--red-bright); }
+.app-pin:focus-visible { outline: 2px solid var(--red-bright); outline-offset: 2px; }
+
+.estrella-inline { display: inline-flex; vertical-align: -3px; color: var(--red-bright); }
 .app-icon {
   width: 44px; height: 44px;
   display: grid; place-items: center;
