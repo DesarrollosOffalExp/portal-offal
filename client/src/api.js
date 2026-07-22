@@ -3,6 +3,12 @@
 // URL de Easy Auth (Entra ID) para iniciar sesión y volver al inicio.
 export const LOGIN_URL = '/.auth/login/aad?post_login_redirect_uri=/';
 
+// Ingreso de usuarios EXTERNOS (proveedores, contratistas sin correo corporativo).
+// Quien entra por acá igual debe estar cargado en acceso.Usuarios para ver algo.
+//   - Invitados de Entra (B2B + código por mail): se usa el mismo /aad de arriba.
+//   - Proveedor social (Google) en Easy Auth: cambiar a '/.auth/login/google?post_login_redirect_uri=/'.
+export const LOGIN_EXTERNO_URL = '/.auth/login/aad?post_login_redirect_uri=/';
+
 export async function getMe() {
   const res = await fetch('/api/me', { credentials: 'include' });
   if (res.status === 401) {
