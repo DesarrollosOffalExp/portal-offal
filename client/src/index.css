@@ -241,8 +241,18 @@ body {
 /* El enlace se estira sobre toda la tarjeta: así se puede clickear en
    cualquier parte y el botón de favorito queda por encima (z-index). */
 /* Hereda el color de la tarjeta: si no, toma el azul de link del navegador. */
-.app-enlace { position: relative; z-index: 0; color: inherit; text-decoration: none; }
-.app-enlace::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }
+.app-enlace { color: inherit; text-decoration: none; }
+/* La capa se estira sobre TODA la tarjeta para que se pueda clickear en
+   cualquier parte (incluido el "Entrar"). El enlace NO debe estar posicionado:
+   si lo estuviera, el inset:0 se resolvería contra el título y no contra
+   .app-card, que es quien tiene position: relative. */
+.app-enlace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 12px;
+}
 .app-enlace:focus-visible { outline: 2px solid var(--red-bright); outline-offset: 3px; border-radius: 4px; }
 
 .app-acciones {
