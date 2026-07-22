@@ -10,6 +10,20 @@ const esMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigat
 // entre dispositivos.
 const FAVORITOS_KEY = 'offal.portal.favoritos';
 
+// Mismo destino que el widget de soporte, para no abrir otro canal.
+const EMAIL_SISTEMAS = 'tickets@offal.com.ar';
+
+/** Arma el pedido de acceso a un módulo, con los datos ya cargados. */
+const mailtoAcceso = (app, usuario) => {
+  const asunto = `[Portal Offal] Pedido de acceso a ${app.nombre}`;
+  const cuerpo =
+    `Hola, necesito acceso al módulo "${app.nombre}" (${app.sector || 'sin sector'}).\n\n` +
+    `Motivo: \n\n` +
+    '------------------------------\n' +
+    `Solicita: ${usuario?.nombre || ''} <${usuario?.email || ''}>\n`;
+  return `mailto:${EMAIL_SISTEMAS}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+};
+
 const leerFavoritos = () => {
   try {
     const guardado = JSON.parse(localStorage.getItem(FAVORITOS_KEY) || '[]');
@@ -186,10 +200,16 @@ export default function App() {
         (a.sector || '').toLowerCase().includes(q);
       return coincideFavorito && coincideSector && coincideTexto;
     })
-    // Los favoritos van primero, manteniendo el orden del catálogo dentro de cada grupo.
-    .sort((a, b) => Number(favoritos.has(b.key)) - Number(favoritos.has(a.key)));
+    // Primero los módulos habilitados y, dentro de esos, los favoritos.
+    // Los que no tiene habilitados quedan al final, visibles pero apagados.
+    .sort(
+      (a, b) =>
+        Number(b.tieneAcceso) - Number(a.tieneAcceso) ||
+        Number(favoritos.has(b.key)) - Number(favoritos.has(a.key)),
+    );
 
   const cantidadFavoritos = apps.filter((a) => favoritos.has(a.key)).length;
+  const cantidadConAcceso = apps.filter((a) => a.tieneAcceso).length;
 
   return (
     <main className="wrap">
@@ -233,10 +253,15 @@ export default function App() {
       <section className="hero">
         <p className="overline">Panel de accesos</p>
         <h1>
-          {apps.length > 0
+          {cantidadConAcceso > 0
             ? 'Elegí el módulo a utilizar.'
-            : 'Todavía no tenés módulos asignados.'}
+            : 'Todavía no tenés módulos habilitados.'}
         </h1>
+        {cantidadConAcceso === 0 && apps.length > 0 && (
+          <p className="hero-nota">
+            Estos son los sistemas de la empresa. Pedile a Sistemas que te habilite el que necesites.
+          </p>
+        )}
       </section>
 
       {apps.length > 0 ? (
@@ -295,9 +320,14 @@ export default function App() {
               {appsFiltradas.map((a) => {
                 const esFavorito = favoritos.has(a.key);
                 return (
-                  <div className={`app-card ${esFavorito ? 'es-favorito' : ''}`} key={a.key}>
+                  <div
+                    key={a.key}
+                    className={`app-card ${esFavorito ? 'es-favorito' : ''} ${a.tieneAcceso ? '' : 'sin-acceso'}`}
+                  >
                     <div className="app-acciones">
-                      {a.sector && <span className="app-tag">{a.sector}</span>}
+                      {a.tieneAcceso
+                        ? a.sector && <span className="app-tag">{a.sector}</span>
+                        : <span className="app-candado" title="Todavía no tenés acceso">Sin acceso</span>}
                       <button
                         type="button"
                         className={`app-pin ${esFavorito ? 'on' : ''}`}
@@ -312,11 +342,24 @@ export default function App() {
                       </button>
                     </div>
                     <span className="app-icon">{iconoDe(a.key)}</span>
-                    {/* El enlace se estira sobre toda la tarjeta (ver .app-enlace::after),
-                        así se puede clickear en cualquier parte sin anidar el botón. */}
-                    <a className="app-nombre app-enlace" href={a.url}>{a.nombre}</a>
+
+                    {a.tieneAcceso ? (
+                      /* El enlace se estira sobre toda la tarjeta (ver .app-enlace::after),
+                         así se puede clickear en cualquier parte sin anidar el botón. */
+                      <a className="app-nombre app-enlace" href={a.url}>{a.nombre}</a>
+                    ) : (
+                      <span className="app-nombre">{a.nombre}</span>
+                    )}
+
                     <span className="app-desc">{a.descripcion}</span>
-                    <span className="app-go">Entrar <span aria-hidden="true">→</span></span>
+
+                    {a.tieneAcceso ? (
+                      <span className="app-go">Entrar <span aria-hidden="true">→</span></span>
+                    ) : (
+                      <a className="app-pedir" href={mailtoAcceso(a, usuario)}>
+                        Solicitar acceso <span aria-hidden="true">→</span>
+                      </a>
+                    )}
                   </div>
                 );
               })}

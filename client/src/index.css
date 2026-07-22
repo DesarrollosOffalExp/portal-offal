@@ -278,6 +278,51 @@ body {
 .app-pin:focus-visible { outline: 2px solid var(--red-bright); outline-offset: 2px; }
 
 .estrella-inline { display: inline-flex; vertical-align: -3px; color: var(--red-bright); }
+
+/* ---------- Módulo visible pero sin acceso ----------
+   Se muestra para que la persona sepa que existe, apagado y sin enlace:
+   mostrar la tarjeta no habilita nada, cada app valida sus permisos. */
+.app-card.sin-acceso {
+  border-top-color: var(--line);
+  background: var(--bg-2);
+}
+.app-card.sin-acceso:hover {
+  background: var(--bg-2);
+  border-top-color: var(--line);
+  transform: none;
+}
+.app-card.sin-acceso .app-icon { background: rgba(139, 160, 171, 0.10); color: var(--muted); }
+.app-card.sin-acceso .app-nombre { color: var(--muted); }
+.app-card.sin-acceso .app-desc { opacity: 0.75; }
+
+.app-candado {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.app-pedir {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.app-pedir:hover { color: var(--red-bright); }
+
+.hero-nota { margin: 10px 0 0; color: var(--muted); font-size: 14px; max-width: 52ch; }
 .app-icon {
   width: 44px; height: 44px;
   display: grid; place-items: center;
