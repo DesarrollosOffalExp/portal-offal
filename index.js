@@ -41,19 +41,20 @@ app.get('/api/me', auth, async (req, res) => {
       permisos = r.recordset;
     }
 
-    // Solo las apps del catálogo para las que tiene permiso, en el orden del catálogo.
+    // Se devuelve TODO el catálogo para que la persona vea qué módulos existen,
+    // marcando en cuáles tiene acceso. Ojo: mostrar la tarjeta no habilita nada;
+    // cada app sigue validando los permisos por su cuenta contra acceso.Permisos.
     const rolPorApp = new Map(permisos.map((p) => [p.App, p.Rol]));
-    const apps = CATALOGO
-      .filter((a) => rolPorApp.has(a.key))
-      .map((a) => ({
-        key: a.key,
-        sector: a.sector,
-        nombre: a.nombre,
-        descripcion: a.descripcion,
-        url: a.url,
-        acento: a.acento,
-        rol: rolPorApp.get(a.key),
-      }));
+    const apps = CATALOGO.map((a) => ({
+      key: a.key,
+      sector: a.sector,
+      nombre: a.nombre,
+      descripcion: a.descripcion,
+      url: a.url,
+      acento: a.acento,
+      rol: rolPorApp.get(a.key) ?? null,
+      tieneAcceso: rolPorApp.has(a.key),
+    }));
 
     res.json({
       usuario: {
