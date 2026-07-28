@@ -124,7 +124,7 @@ export default function App() {
           <div className="login-brand-side">
             <div className="login-brand-inner">
               <span className="login-badge"><img src="/logo.png" alt="Offal Exp S.A." /></span>
-              <p className="login-wordmark">OFFAL EXP S.A.</p>
+              <img className="login-wordmark-img" src="/logo-offal.svg" alt="Offal Exp S.A." />
               <p className="login-tag">Portal único de accesos a los sistemas de la empresa.</p>
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function App() {
       <header className="top">
         <div className="brand">
           <a className="brand-badge" href="/" title="Inicio"><img src="/logo.png" alt="Offal Exp S.A." /></a>
-          <span className="brand-mark">OFFAL EXP S.A.</span>
+          <img className="brand-wordmark" src="/logo-offal.svg" alt="Offal Exp S.A." />
         </div>
         <div className="user-wrap">
           <button
@@ -388,8 +388,9 @@ export default function App() {
       )}
 
       <footer className="pie">
-        <span>Offal · Panel de accesos</span>
-        <span className="pie-mail">{usuario.email}</span>
+        <a className="pie-mail" href="mailto:sistemas@offal.com.ar">sistemas@offal.com.ar</a>
+        <span className="pie-centro">Offal Exp S.A. | Oficina de Sistemas</span>
+        <span className="pie-sp" aria-hidden="true" />
       </footer>
 
       <SoporteWidget usuario={usuario} />
