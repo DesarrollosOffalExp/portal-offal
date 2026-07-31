@@ -388,9 +388,8 @@ export default function App() {
       )}
 
       <footer className="pie">
+        <span className="pie-titulo">Offal Exp S.A. | Oficina de Sistemas</span>
         <a className="pie-mail" href="mailto:sistemas@offal.com.ar">sistemas@offal.com.ar</a>
-        <span className="pie-centro">Offal Exp S.A. | Oficina de Sistemas</span>
-        <span className="pie-sp" aria-hidden="true" />
       </footer>
 
       <SoporteWidget usuario={usuario} />
