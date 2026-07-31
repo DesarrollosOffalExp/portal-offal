@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
@@ -9,6 +10,15 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3005;
+
+// Cabeceras de seguridad. El CSP se define aparte por app (uno mal puesto
+// bloquea los propios scripts y deja la pantalla en blanco), y no forzamos
+// políticas cross-origin para no romper recursos externos (fuentes/imágenes).
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginResourcePolicy: false,
+  crossOriginEmbedderPolicy: false,
+}));
 
 app.use(cors({ credentials: true }));
 app.use(express.json());
