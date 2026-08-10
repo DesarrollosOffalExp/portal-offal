@@ -7,12 +7,20 @@
  *
  * ⚠️ CONFIRMAR las URLs de producción con las reales de cada App Service /
  * dominio personalizado antes de publicar. Se pueden sobreescribir por variable
- * de entorno (URL_PROVEEDORES, URL_ETIQUETAS, URL_LAVADOS) sin tocar el código.
+ * de entorno (URL_PROVEEDORES, URL_ETIQUETAS, URL_LAVADOS, URL_KPI) sin tocar el código.
  */
 // Orden en el que se muestran los sectores en el portal.
-const ORDEN_SECTORES = ['Recursos Humanos', 'Logística', 'Calidad', 'Compras'];
+const ORDEN_SECTORES = ['Gerencia', 'Recursos Humanos', 'Logística', 'Calidad', 'Compras'];
 
 const apps = [
+  {
+    key: 'kpi',
+    sector: 'Gerencia',
+    nombre: 'Tablero de KPIs',
+    descripcion: 'Indicadores de gestión por sector: Insumos, Compras, Fábrica de Hielo, Logística y Sistemas.',
+    url: process.env.URL_KPI || 'https://gerencia.offalexpsa.ar',
+    acento: 'indigo',
+  },
   {
     key: 'contratos',
     sector: 'Compras',
