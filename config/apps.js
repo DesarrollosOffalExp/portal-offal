@@ -51,8 +51,7 @@ const apps = [
     sector: 'Logística',
     nombre: 'Registro de Choferes',
     descripcion: 'Tiempo de los choferes en planta vs. en viaje (fichada + GPS).',
-    // TODO: reemplazar por la URL real tras el deploy (o setear URL_CHOFERES).
-    url: process.env.URL_CHOFERES || 'https://controlchoferes-PENDIENTE-DEPLOY.azurewebsites.net',
+    url: process.env.URL_CHOFERES || 'https://logistica.offalexpsa.ar',
     acento: 'cyan',
   },
   {
