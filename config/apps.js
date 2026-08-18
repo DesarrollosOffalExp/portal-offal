@@ -7,7 +7,8 @@
  *
  * ⚠️ CONFIRMAR las URLs de producción con las reales de cada App Service /
  * dominio personalizado antes de publicar. Se pueden sobreescribir por variable
- * de entorno (URL_PROVEEDORES, URL_ETIQUETAS, URL_LAVADOS, URL_KPI) sin tocar el código.
+ * de entorno (URL_PROVEEDORES, URL_ETIQUETAS, URL_LAVADOS, URL_KPI, URL_CHOFERES)
+ * sin tocar el código.
  */
 // Orden en el que se muestran los sectores en el portal.
 const ORDEN_SECTORES = ['Gerencia', 'Recursos Humanos', 'Logística', 'Calidad', 'Compras'];
@@ -44,6 +45,15 @@ const apps = [
     descripcion: 'Lavado de camiones y fábrica de hielo.',
     url: process.env.URL_LAVADOS || 'https://controllavadocamiones-cyhscqdmf7eddhc8.eastus-01.azurewebsites.net',
     acento: 'verde',
+  },
+  {
+    key: 'choferes',
+    sector: 'Logística',
+    nombre: 'Registro de Choferes',
+    descripcion: 'Tiempo de los choferes en planta vs. en viaje (fichada + GPS).',
+    // TODO: reemplazar por la URL real tras el deploy (o setear URL_CHOFERES).
+    url: process.env.URL_CHOFERES || 'https://controlchoferes-PENDIENTE-DEPLOY.azurewebsites.net',
+    acento: 'cyan',
   },
   {
     key: 'etiquetas',
