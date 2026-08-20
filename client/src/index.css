@@ -194,6 +194,16 @@ body {
 }
 .chip-fav:not(.on) .chip-cont { background: var(--bg-2); }
 
+/* Submenú de "Gerencia": segunda fila de chips, mismo estilo, apenas indentada
+   y separada para que se lea como nivel dependiente del chip "Gerencia". */
+.chips-sub {
+  width: 100%;
+  margin-top: 10px;
+  padding-left: 14px;
+  border-left: 2px solid var(--line);
+}
+.chips-sub .chip { font-size: 12px; padding: 6px 13px; }
+
 .search { position: relative; display: flex; align-items: center; flex: 0 1 320px; min-width: 220px; }
 .search .lupa {
   position: absolute;
