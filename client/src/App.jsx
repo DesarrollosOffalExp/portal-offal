@@ -59,6 +59,7 @@ const ICONOS = {
   lavados: svg(<><rect x="1" y="3" width="15" height="13" /><polygon points="16 8 20 8 23 11 23 16 16 16 16 8" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" /></>),
   etiquetas: svg(<><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></>),
   contratos: svg(<><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></>),
+  kpi: svg(<><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></>),
 };
 const iconoDe = (key) => ICONOS[key] || svg(<><circle cx="12" cy="12" r="9" /></>);
 
@@ -67,6 +68,7 @@ export default function App() {
   const [data, setData] = useState(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [sectorActivo, setSectorActivo] = useState(null); // null = todos
+  const [subgerenciaActiva, setSubgerenciaActiva] = useState(null); // sub-área dentro de "Gerencia"
   const [busqueda, setBusqueda] = useState('');
   const [favoritos, setFavoritos] = useState(leerFavoritos);
   const [soloFavoritos, setSoloFavoritos] = useState(false);
@@ -186,6 +188,11 @@ export default function App() {
 
   const { usuario, apps } = data;
 
+  // Sub-áreas del sector "Gerencia": vienen del backend para poder mostrarlas
+  // todas (aunque estén vacías). El chip "Gerencia" las despliega como submenú.
+  const subgerencias = Array.isArray(data.subgerencias) ? data.subgerencias : [];
+  const gerenciaActiva = sectorActivo === 'Gerencia' && !soloFavoritos;
+
   // Sectores que la persona realmente tiene (según sus permisos) y filtro activo.
   const sectoresDisponibles = [...new Set(apps.map((a) => a.sector).filter(Boolean))];
   const q = busqueda.trim().toLowerCase();
@@ -193,12 +200,16 @@ export default function App() {
     .filter((a) => {
       const coincideFavorito = !soloFavoritos || favoritos.has(a.key);
       const coincideSector = !sectorActivo || a.sector === sectorActivo;
+      // Dentro de "Gerencia", si hay una sub-área elegida, se filtra por ella.
+      const coincideSubgerencia =
+        !gerenciaActiva || !subgerenciaActiva || a.subsector === subgerenciaActiva;
       const coincideTexto =
         !q ||
         (a.nombre || '').toLowerCase().includes(q) ||
         (a.descripcion || '').toLowerCase().includes(q) ||
-        (a.sector || '').toLowerCase().includes(q);
-      return coincideFavorito && coincideSector && coincideTexto;
+        (a.sector || '').toLowerCase().includes(q) ||
+        (a.subsector || '').toLowerCase().includes(q);
+      return coincideFavorito && coincideSector && coincideSubgerencia && coincideTexto;
     })
     // Primero los módulos habilitados y, dentro de esos, los favoritos.
     // Los que no tiene habilitados quedan al final, visibles pero apagados.
@@ -275,7 +286,7 @@ export default function App() {
                 className={`chip chip-fav ${soloFavoritos ? 'on' : ''}`}
                 aria-pressed={soloFavoritos}
                 title={soloFavoritos ? 'Ver todos los módulos' : 'Ver solo mis favoritos'}
-                onClick={() => { setSoloFavoritos((v) => !v); setSectorActivo(null); }}
+                onClick={() => { setSoloFavoritos((v) => !v); setSectorActivo(null); setSubgerenciaActiva(null); }}
               >
                 {iconoEstrella(soloFavoritos)}
                 Favoritos
@@ -290,13 +301,43 @@ export default function App() {
                     className={`chip ${activo ? 'on' : ''}`}
                     aria-pressed={activo}
                     title={activo ? 'Quitar el filtro' : `Ver solo ${s}`}
-                    onClick={() => { setSectorActivo(activo ? null : s); setSoloFavoritos(false); }}
+                    onClick={() => {
+                      setSectorActivo(activo ? null : s);
+                      setSoloFavoritos(false);
+                      setSubgerenciaActiva(null); // al cambiar de sector se limpia la sub-área
+                    }}
                   >
                     {s}
                   </button>
                 );
               })}
             </div>
+
+            {/* Submenú de "Gerencia": aparece solo cuando ese chip está activo.
+                Reusa el mismo componente de chips (mismo estilo), como una
+                segunda fila. Se listan TODAS las gerencias aunque estén vacías. */}
+            {gerenciaActiva && subgerencias.length > 0 && (
+              <div className="chips chips-sub">
+                {subgerencias.map((sg) => {
+                  const activa = subgerenciaActiva === sg;
+                  const cant = apps.filter((a) => a.subsector === sg).length;
+                  const etiqueta = sg.replace(/^Gerencia (de |)/, '') || sg;
+                  return (
+                    <button
+                      key={sg}
+                      type="button"
+                      className={`chip ${activa ? 'on' : ''}`}
+                      aria-pressed={activa}
+                      title={activa ? 'Ver toda la Gerencia' : `Ver solo ${sg}`}
+                      onClick={() => setSubgerenciaActiva(activa ? null : sg)}
+                    >
+                      {etiqueta}
+                      {cant > 0 && <span className="chip-cont">{cant}</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
             <div className="search">
               <svg className="lupa" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -371,6 +412,8 @@ export default function App() {
                   Todavía no marcaste ningún módulo como favorito.<br />
                   Tocá la <span className="estrella-inline">{iconoEstrella(false)}</span> de una tarjeta para tenerlo siempre a mano.
                 </>
+              ) : gerenciaActiva && subgerenciaActiva && !q ? (
+                <>Todavía no hay módulos en {subgerenciaActiva}.</>
               ) : (
                 <>No encontramos módulos para “{busqueda}”. Probá con otro término o sector.</>
               )}

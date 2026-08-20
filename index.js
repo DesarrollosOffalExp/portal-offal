@@ -58,12 +58,14 @@ app.get('/api/me', auth, async (req, res) => {
     const apps = CATALOGO.map((a) => ({
       key: a.key,
       sector: a.sector,
+      subsector: a.subsector ?? null,
       nombre: a.nombre,
       descripcion: a.descripcion,
       url: a.url,
       acento: a.acento,
       rol: rolPorApp.get(a.key) ?? null,
-      tieneAcceso: rolPorApp.has(a.key),
+      // accesoLibre: la tarjeta queda clickeable para todos (la app destino valida).
+      tieneAcceso: a.accesoLibre === true || rolPorApp.has(a.key),
     }));
 
     res.json({
@@ -73,6 +75,8 @@ app.get('/api/me', auth, async (req, res) => {
         registrado: req.user.registrado,
       },
       apps,
+      // Sub-áreas del sector "Gerencia" (se muestran como submenú aunque estén vacías).
+      subgerencias: CATALOGO.SUBGERENCIAS || [],
     });
   } catch (err) {
     console.error('[Portal] /api/me error:', err.message);

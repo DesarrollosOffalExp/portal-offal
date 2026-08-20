@@ -13,14 +13,29 @@
 // Orden en el que se muestran los sectores en el portal.
 const ORDEN_SECTORES = ['Gerencia', 'Recursos Humanos', 'Logística', 'Calidad', 'Compras'];
 
+// Sub-áreas dentro del sector "Gerencia". Se muestran TODAS como submenú aunque
+// todavía no tengan módulos (es un orden visual; no toca ninguna tabla de SQL).
+const SUBGERENCIAS = [
+  'Gerencia de Operaciones',
+  'Gerencia de Calidad',
+  'Gerencia de Mantenimiento',
+  'Gerencia de Recursos Humanos',
+  'Gerencia General',
+];
+
 const apps = [
   {
     key: 'kpi',
     sector: 'Gerencia',
+    subsector: 'Gerencia de Operaciones',
     nombre: 'Tablero de KPIs',
     descripcion: 'Indicadores de gestión por sector: Insumos, Compras, Fábrica de Hielo, Logística y Sistemas.',
     url: process.env.URL_KPI || 'https://gerencia.offalexpsa.ar',
     acento: 'indigo',
+    // Visible y clickeable para todos; la app de KPIs (gerencia.offalexpsa.ar)
+    // valida quién ve los datos. Así no depende de un permiso en acceso.Permisos
+    // (no se toca la base).
+    accesoLibre: true,
   },
   {
     key: 'contratos',
@@ -66,3 +81,4 @@ const apps = [
 
 module.exports = apps;
 module.exports.ORDEN_SECTORES = ORDEN_SECTORES;
+module.exports.SUBGERENCIAS = SUBGERENCIAS;
