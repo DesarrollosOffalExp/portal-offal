@@ -77,6 +77,21 @@ const apps = [
     url: process.env.URL_ETIQUETAS || 'https://etiquetas.offalexpsa.ar',
     acento: 'cyan',
   },
+  {
+    key: 'calidad',
+    sector: 'Calidad',
+    nombre: 'Control de Carga - Calidad',
+    descripcion: 'Control de la mercadería que se carga en congelados para despacho: lectura de codbar y registro del control.',
+    url: process.env.URL_CALIDAD || 'https://controlcalidad-c5dvdkb7dae4gnaf.canadacentral-01.azurewebsites.net',
+    // ⚠️ TEMPORAL. accesoLibre deja la tarjeta clickeable para todos mientras se
+    // prueba el módulo (la app corre con CALIDAD_REQUIRE_PERMISSION=false, así que
+    // valida solo estar en acceso.Usuarios). Al cargar los permisos 'calidad' en
+    // acceso.Permisos y poner esa variable en true, SACAR esta línea: si no, la
+    // tarjeta le sigue apareciendo clickeable a gente que después rebota con
+    // "No tenés permiso para este módulo".
+    accesoLibre: true,
+    acento: 'cyan',
+  },
 ];
 
 module.exports = apps;
