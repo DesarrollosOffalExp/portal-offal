@@ -223,8 +223,9 @@ export default function App() {
   const cantidadConAcceso = apps.filter((a) => a.tieneAcceso).length;
 
   return (
-    <main className="wrap">
-      <header className="top">
+    <>
+      <header className="appbar">
+        <div className="appbar-inner">
         <div className="brand">
           <a className="brand-badge" href="/" title="Inicio"><img src="/logo.png" alt="Offal Exp S.A." /></a>
           <img className="brand-wordmark" src="/logo-offal.svg" alt="Offal Exp S.A." />
@@ -259,8 +260,10 @@ export default function App() {
             </>
           )}
         </div>
+        </div>
       </header>
 
+      <main className="wrap">
       <section className="hero">
         <p className="overline">Panel de accesos</p>
         <h1>
@@ -434,8 +437,9 @@ export default function App() {
         <span className="pie-titulo">Offal Exp S.A. | Oficina de Sistemas</span>
         <a className="pie-mail" href="mailto:sistemas@offal.com.ar">sistemas@offal.com.ar</a>
       </footer>
+      </main>
 
       <SoporteWidget usuario={usuario} />
-    </main>
+    </>
   );
 }

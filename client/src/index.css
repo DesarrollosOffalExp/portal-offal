@@ -83,6 +83,28 @@ body {
   display: block;
 }
 
+/* Barra superior sólida y fija: misma que los módulos (navbar unificada). */
+.appbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--panel);
+  border-bottom: 2px solid var(--red);
+}
+.appbar-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  height: 64px;
+  padding: 0 clamp(18px, 4vw, 28px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.appbar .brand { gap: 11px; }
+.appbar .brand-badge { width: 40px; height: 40px; }
+.appbar .brand-wordmark { height: 17px; }
+
 .user-wrap { position: relative; }
 .user {
   display: flex; align-items: center; gap: 10px;
