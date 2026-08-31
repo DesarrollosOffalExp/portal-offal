@@ -20,6 +20,7 @@ const SUBGERENCIAS = [
   'Gerencia de Calidad',
   'Gerencia de Mantenimiento',
   'Gerencia de Recursos Humanos',
+  'Gerencia de Gestión',
   'Gerencia General',
 ];
 
