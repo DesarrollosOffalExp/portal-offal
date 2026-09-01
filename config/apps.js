@@ -94,7 +94,7 @@ const apps = [
   {
     key: 'calidad',
     sector: 'Calidad',
-    nombre: 'Control de Carga - Calidad',
+    nombre: 'Control de Carga',
     descripcion: 'Control de la mercadería que se carga en congelados para despacho: lectura de codbar y registro del control.',
     url: process.env.URL_CALIDAD || 'https://controlcalidad-c5dvdkb7dae4gnaf.canadacentral-01.azurewebsites.net',
     // ⚠️ TEMPORAL. accesoLibre deja la tarjeta clickeable para todos mientras se
