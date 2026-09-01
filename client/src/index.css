@@ -350,6 +350,21 @@ body {
 .app-card.sin-acceso .app-nombre { color: var(--muted); }
 .app-card.sin-acceso .app-desc { opacity: 0.75; }
 
+/* ---------- Módulo aún no deployado ("Próximamente") ----------
+   Se adelanta la tarjeta como estructura: visible, apagada y no clickeable. */
+.app-card.proximamente { border-top-color: rgba(201, 143, 87, 0.5); cursor: default; }
+.app-card.proximamente:hover { transform: none; }
+.app-card.proximamente .app-icon { background: rgba(201, 143, 87, 0.12); color: #c98f57; }
+.app-card.proximamente .app-desc { opacity: 0.8; }
+.app-tag-pronto {
+  padding: 2px 9px;
+  border: 1px solid rgba(201, 143, 87, 0.5);
+  border-radius: 999px;
+  color: #d8a86e;
+}
+.app-go-pronto,
+.app-card.proximamente:hover .app-go { color: #c98f57; }
+
 .app-candado {
   display: inline-flex;
   align-items: center;
