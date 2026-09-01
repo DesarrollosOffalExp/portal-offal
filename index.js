@@ -63,6 +63,7 @@ app.get('/api/me', auth, async (req, res) => {
       descripcion: a.descripcion,
       url: a.url,
       acento: a.acento,
+      proximamente: a.proximamente === true,
       rol: rolPorApp.get(a.key) ?? null,
       // accesoLibre: la tarjeta queda clickeable para todos (la app destino valida).
       tieneAcceso: a.accesoLibre === true || rolPorApp.has(a.key),

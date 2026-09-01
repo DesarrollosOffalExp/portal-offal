@@ -60,6 +60,7 @@ const ICONOS = {
   etiquetas: svg(<><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></>),
   contratos: svg(<><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></>),
   kpi: svg(<><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></>),
+  presupuesto: svg(<><path d="M21.21 15.89A10 10 0 1 1 8 2.83" /><path d="M22 12A10 10 0 0 0 12 2v10z" /></>),
 };
 const iconoDe = (key) => ICONOS[key] || svg(<><circle cx="12" cy="12" r="9" /></>);
 
@@ -366,12 +367,14 @@ export default function App() {
                 return (
                   <div
                     key={a.key}
-                    className={`app-card ${esFavorito ? 'es-favorito' : ''} ${a.tieneAcceso ? '' : 'sin-acceso'}`}
+                    className={`app-card ${esFavorito ? 'es-favorito' : ''} ${a.proximamente ? 'proximamente' : a.tieneAcceso ? '' : 'sin-acceso'}`}
                   >
                     <div className="app-acciones">
-                      {a.tieneAcceso
-                        ? a.sector && <span className="app-tag">{a.sector}</span>
-                        : <span className="app-candado" title="Todavía no tenés acceso">Sin acceso</span>}
+                      {a.proximamente
+                        ? <span className="app-tag app-tag-pronto">Próximamente</span>
+                        : a.tieneAcceso
+                          ? a.sector && <span className="app-tag">{a.sector}</span>
+                          : <span className="app-candado" title="Todavía no tenés acceso">Sin acceso</span>}
                       <button
                         type="button"
                         className={`app-pin ${esFavorito ? 'on' : ''}`}
@@ -387,7 +390,7 @@ export default function App() {
                     </div>
                     <span className="app-icon">{iconoDe(a.key)}</span>
 
-                    {a.tieneAcceso ? (
+                    {a.tieneAcceso && !a.proximamente ? (
                       /* El enlace se estira sobre toda la tarjeta (ver .app-enlace::after),
                          así se puede clickear en cualquier parte sin anidar el botón. */
                       <a className="app-nombre app-enlace" href={a.url}>{a.nombre}</a>
@@ -397,7 +400,9 @@ export default function App() {
 
                     <span className="app-desc">{a.descripcion}</span>
 
-                    {a.tieneAcceso ? (
+                    {a.proximamente ? (
+                      <span className="app-go app-go-pronto">Próximamente</span>
+                    ) : a.tieneAcceso ? (
                       <span className="app-go">Entrar <span aria-hidden="true">→</span></span>
                     ) : (
                       <a className="app-pedir" href={mailtoAcceso(a, usuario)}>

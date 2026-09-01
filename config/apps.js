@@ -39,6 +39,19 @@ const apps = [
     accesoLibre: true,
   },
   {
+    key: 'presupuesto',
+    sector: 'Gerencia',
+    subsector: 'Gerencia de Gestión',
+    nombre: 'Tablero de Presupuesto',
+    descripcion: 'Seguimiento y control del presupuesto por área.',
+    url: process.env.URL_PRESUPUESTO || '#',
+    acento: 'indigo',
+    // Todavía no está deployado: se muestra la tarjeta como "Próximamente"
+    // (no clickeable) hasta que tenga URL productiva. Cuando se publique,
+    // basta setear URL_PRESUPUESTO y quitar esta bandera.
+    proximamente: true,
+  },
+  {
     key: 'contratos',
     sector: 'Compras',
     nombre: 'Contratos Comerciales',
